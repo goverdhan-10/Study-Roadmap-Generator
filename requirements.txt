@@ -1,0 +1,14 @@
+streamlit==1.32.0
+pandas
+scikit-learn
+nltk
+pymupdf
+wikipedia
+networkx
+pyvis
+matplotlib
+transformers
+torch
+torchvision
+sentence-transformers
+joblib
