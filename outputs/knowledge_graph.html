@@ -88,8 +88,8 @@
                   
 
                   // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"color": "#4da6ff", "font": {"color": "white"}, "id": "environment", "label": "Environment", "shape": "box", "size": 25}, {"color": "#4da6ff", "font": {"color": "white"}, "id": "variables", "label": "Variables", "shape": "box", "size": 25}, {"color": "#ff4b4b", "font": {"color": "white"}, "id": "artificial intelligence", "label": "Artificial Intelligence", "shape": "hexagon", "size": 40}]);
-                  edges = new vis.DataSet([{"arrows": "to", "color": "#aaaaaa", "from": "environment", "to": "variables", "width": 1}, {"arrows": "to", "color": "#ff4b4b", "from": "variables", "label": "Final Step", "to": "artificial intelligence", "width": 1}]);
+                  nodes = new vis.DataSet([{"color": "#4da6ff", "font": {"color": "white"}, "id": "resolution", "label": "Resolution", "shape": "box", "size": 25}, {"color": "#ff4b4b", "font": {"color": "white"}, "id": "artificial intelligence", "label": "Artificial Intelligence", "shape": "hexagon", "size": 40}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "#ff4b4b", "from": "resolution", "label": "Final Step", "to": "artificial intelligence", "width": 1}]);
 
                   nodeColors = {};
                   allNodes = nodes.get({ returnType: "Object" });

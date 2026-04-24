@@ -124,58 +124,55 @@ with tab2:
     if "history" not in st.session_state or not st.session_state["history"]:
         st.info("No files analyzed yet.")
     else:
-        for fname in st.session_state["history"]:
+        # UPGRADE: Use a selectbox instead of buttons to prevent state crashes!
+        history_files = list(st.session_state["history"].keys())
+        selected_file = st.selectbox("Select a file to view its history:", history_files)
 
-            if st.button(fname):
+        if selected_file:
+            selected = st.session_state["history"][selected_file]
 
-                selected = st.session_state["history"][fname]
+            # ---------------- MERGED PREREQUISITES + ORDER (UPGRADED UI) ----------------
+            st.subheader("🎯 Step-by-Step Learning Order")
 
-                st.success(f"Opened: {fname}")
-
-                # ---------------- MERGED PREREQUISITES + ORDER ----------------
-                # ---------------- MERGED PREREQUISITES + ORDER (UPGRADED UI) ----------------
-            st.subheader("Step-by-Step Learning Order")
-
-            if not result["learning_order"]:
+            if not selected.get("learning_order"):
                 st.warning("No prerequisites detected.")
             else:
-                # Format as a visual breadcrumb trail: A ➔ B ➔ C
-                path_steps = [f"**{topic.title()}**" for topic in result["learning_order"]]
+                path_steps = [f"**{topic.title()}**" for topic in selected["learning_order"]]
                 visual_path = " ➔ ".join(path_steps)
-                
-                # Display inside a highlighted info box
                 st.info(visual_path)
 
             # ---------------- LEARNING PATH (UPGRADED UI) ----------------
-            st.subheader(" Concept Relationships")
+            st.subheader("🔗 Concept Relationships")
 
-            if result.get("relations"):
-                # Create a clean layout for the relationships
-                for i, (c1, c2) in enumerate(result["relations"]):
+            if selected.get("relations"):
+                for i, (c1, c2) in enumerate(selected["relations"]):
                     st.markdown(f"🔹 **{c1.title()}** is required to understand 🔓 **{c2.title()}**")
             else:
                 st.write("No structured learning path generated.")
 
-                # ---------------- GRAPH VISUALIZATION (STATIC MATPLOTLIB) ----------------
-                st.subheader("Prerequisite Relationship Graph")
+            # ---------------- GRAPH VISUALIZATION (STATIC MATPLOTLIB) ----------------
+            st.subheader("Prerequisite Relationship Graph")
 
-                prereq_dict = {}
+            prereq_dict = {}
 
-                if selected.get("relations"):
-                    for c1, c2 in selected["relations"]:
-                        if c2 not in prereq_dict:
-                            prereq_dict[c2] = []
-                        prereq_dict[c2].append(c1)
+            if selected.get("relations"):
+                for c1, c2 in selected["relations"]:
+                    if c2 not in prereq_dict:
+                        prereq_dict[c2] = []
+                    prereq_dict[c2].append(c1)
 
-                if prereq_dict:
-                    fig = create_prerequisite_graph(prereq_dict)
-                    st.pyplot(fig)
-                else:
-                    st.warning("No graph could be generated.")
+            if prereq_dict:
+                fig = create_prerequisite_graph(prereq_dict)
+                st.pyplot(fig)
+            else:
+                st.warning("No graph could be generated.")
 
-                # ---------------- ROADMAP (WITH WIKI LINKS) ----------------
-                st.subheader("Study Roadmap")
+            # ---------------- ROADMAP (WITH WIKI LINKS) ----------------
+            st.subheader("Study Roadmap")
 
+            if not selected.get("study_roadmap"):
+                st.warning("No roadmap generated.")
+            else:
                 for item in selected["study_roadmap"]:
                     topic_name = item.get("topic", "Concept")
 
@@ -183,6 +180,5 @@ with tab2:
                         st.markdown("**Definition:**")
                         st.write(item.get("definition", ""))
                         
-                        # Show the Wikipedia link if it exists
                         if item.get("url"):
                             st.markdown(f"[🔗 Read more on Wikipedia]({item['url']})")
