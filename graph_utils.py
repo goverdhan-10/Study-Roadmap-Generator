@@ -8,7 +8,10 @@ def create_prerequisite_graph(prereq_dict):
         for prereq in prereqs:
             G.add_edge(prereq, subject)
 
-    plt.figure(figsize=(10, 7))
+    # Create the figure explicitly
+    fig = plt.figure(figsize=(10, 7))
+    
+    # Use spring_layout which gives that specific "floating bubble" look
     pos = nx.spring_layout(G, seed=42)
 
     nx.draw(
@@ -22,4 +25,6 @@ def create_prerequisite_graph(prereq_dict):
     )
 
     plt.title("Prerequisite Learning Graph")
-    return plt
+    
+    # Return the figure object to Streamlit
+    return fig

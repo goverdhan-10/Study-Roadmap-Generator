@@ -141,11 +141,13 @@ def analyze_text(text: str, csv_path: str) -> Dict[str, Any]:
             "url": wiki_data["url"]
         })
 
-    # -------- GENERATE GRAPH --------
-    graph_file = build_graph(prerequisites, matched_subject)
-
     # -------- SMART LEARNING ORDER --------
+    # We must calculate this first so we can pass relations to the graph!
     learning_order, clean_relations = generate_learning_order(prerequisites)
+
+    # -------- GENERATE GRAPH --------
+    # Now pass the clean_relations into the graph builder
+    graph_file = build_graph(prerequisites, clean_relations, matched_subject)
 
     return {
         "predicted_subject": matched_subject,

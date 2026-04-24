@@ -66,7 +66,16 @@ def run_full_pipeline(file_path):
 
 
 if __name__ == "__main__":
-
-    file_path = r"train_uploads/yourfile.pdf"
-
-    run_full_pipeline(file_path)
+    
+    # Check the uploads folder
+    upload_dir = Path("uploads")
+    
+    # Grab all PDFs in the folder
+    available_pdfs = list(upload_dir.glob("*.pdf"))
+    
+    if available_pdfs:
+        # Automatically use the first PDF it finds
+        file_path = str(available_pdfs[0])
+        run_full_pipeline(file_path)
+    else:
+        print("❌ No PDFs found in the 'uploads' folder! Please place at least one PDF there.")
